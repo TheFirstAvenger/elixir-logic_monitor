@@ -4,11 +4,11 @@ defmodule LogicMonitor.Request do
   def lm_access_key(), do: Application.get_env(:logic_monitor, :access_key)
 
   def get(resource_path, query_params, client \\ HTTPotion) do
-    request("GET", resource_path, query_params, '')
+    request("GET", resource_path, query_params, '', client)
   end
 
   def post(resource_path, query_params, payload, client \\ HTTPotion) do
-    request("POST", resource_path, query_params, payload)
+    request("POST", resource_path, query_params, payload, client)
   end
 
   def request(method, resource_path, query_params, payload, client \\ HTTPotion) do
