@@ -44,6 +44,7 @@ LogicMonitor.Alerts.all(sort: "this_way", fields: "type,id")
 ```elixir
 LogicMonitor.ApiTokens.all()
 LogicMonitor.ApiTokens.all(sort: "this_way", fields: "accessId,adminName")
+LogicMonitor.ApiTokens.for_user("124")
 ```
 
 ### AuditLogs
