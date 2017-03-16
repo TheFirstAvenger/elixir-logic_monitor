@@ -6,31 +6,31 @@ defmodule LogicMonitor.QueryParams do
 
   ## Examples
 
-      iex> LogicMonitor.QueryParams.to_string([asdf: 123, hjkl: 456], [:asdf, :hjkl])
+      iex> LogicMonitor.QueryParams.convert([asdf: 123, hjkl: 456], [:asdf, :hjkl])
       "asdf=123&hjkl=456"
 
-      iex> LogicMonitor.QueryParams.to_string([asdf: 123, hjkl: 456], [:asdf])
+      iex> LogicMonitor.QueryParams.convert([asdf: 123, hjkl: 456], [:asdf])
       "asdf=123"
 
-      iex> LogicMonitor.QueryParams.to_string([asdf: 123, hjkl: 456], [:hjkl])
+      iex> LogicMonitor.QueryParams.convert([asdf: 123, hjkl: 456], [:hjkl])
       "hjkl=456"
 
-      iex> LogicMonitor.QueryParams.to_string([asdf: 123, hjkl: 456], [:qwerty])
+      iex> LogicMonitor.QueryParams.convert([asdf: 123, hjkl: 456], [:qwerty])
       ""
 
-      iex> LogicMonitor.QueryParams.to_string([asdf: 123, hjkl: 456], [])
+      iex> LogicMonitor.QueryParams.convert([asdf: 123, hjkl: 456], [])
       ""
 
   """
-  def to_string(_params, []), do: ""
-  def to_string(params, [h | t]) do
+  def convert(_params, []), do: ""
+  def convert(params, [h | t]) do
     amp = case t do
       [] -> ""
       _  -> "&"
     end
     cond do
-      Keyword.has_key?(params, h) -> "#{to_string(h)}=#{params[h]}#{amp}#{to_string(params, t)}"
-      true -> to_string(params, t)
+      Keyword.has_key?(params, h) -> "#{to_string(h)}=#{params[h]}#{amp}#{convert(params, t)}"
+      true -> convert(params, t)
     end
   end
 

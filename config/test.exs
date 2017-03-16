@@ -5,3 +5,6 @@ config :logic_monitor,
   access_key: "test",
   access_id: "test",
   timestamp_override: LogicMonitor.MockTimestamp
+
+config :logger,
+  level: :warn

@@ -1,3 +1,5 @@
+require Logger
+
 defmodule LogicMonitor.Request do
   def lm_account(), do: Application.get_env(:logic_monitor, :account)
   def lm_access_id(), do: Application.get_env(:logic_monitor, :access_id)
@@ -19,12 +21,11 @@ defmodule LogicMonitor.Request do
     request_vars = "#{method}#{epoch}#{resource_path}"
     signature = :crypto.hmac(:sha256, lm_access_key(), request_vars) |> Base.encode16 |> to_string |> String.downcase |> Base.encode64
     auth = "LMv1 #{lm_access_id()}:#{signature}:#{epoch}"
-    IO.inspect url
+    Logger.debug("Sending #{method} to #{url}")
     case httpotion_request(client, method, url, payload, [timeout: lm_timeout(), headers: ["Content-Type": "application/json", "Authorization": auth]]) do
       %HTTPotion.ErrorResponse{message: message} ->
         {:error, message}
-      ret = %{body: body, headers: headers} ->
-        IO.inspect ret
+      %{body: body, headers: headers} ->
         case Poison.decode(body) do
            {:ok, %{"status" => status, "data" => data}} -> {:ok, {status, data}}
            {:error, {:invalid, "<", _}} -> {:error, {body, headers}}
