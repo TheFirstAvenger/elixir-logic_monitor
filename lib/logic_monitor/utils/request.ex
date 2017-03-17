@@ -21,7 +21,7 @@ defmodule LogicMonitor.Request do
     request_vars = "#{method}#{epoch}#{resource_path}"
     signature = :crypto.hmac(:sha256, lm_access_key(), request_vars) |> Base.encode16 |> to_string |> String.downcase |> Base.encode64
     auth = "LMv1 #{lm_access_id()}:#{signature}:#{epoch}"
-    Logger.debug("Sending #{method} to #{url}")
+    Logger.debug("LogicMonitor.Request: Sending #{method} to #{url}")
     case httpotion_request(client, method, url, payload, [timeout: lm_timeout(), headers: ["Content-Type": "application/json", "Authorization": auth]]) do
       %HTTPotion.ErrorResponse{message: message} ->
         {:error, message}
