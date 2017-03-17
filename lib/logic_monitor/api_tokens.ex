@@ -2,15 +2,26 @@ defmodule LogicMonitor.ApiTokens do
   alias LogicMonitor.Request
   alias LogicMonitor.QueryParams
 
-  @all_params [:sort, :filter, :fields, :size, :offset]
-  @for_user_params []
+  @moduledoc """
+  Provides access to the API Tokens Resource
+  """
 
-  def all(query_params \\ [], client \\ HTTPotion) do
-    Request.get("/setting/admins/apitokens", QueryParams.convert(query_params, @all_params), client)
+  @all_params [:sort, :filter, :fields, :size, :offset]
+
+  @doc """
+  Returns all Api Tokens. Request parameters as described [here](https://www.logicmonitor.com/support/rest-api-developers-guide/api-tokens/get-api-tokens/).
+  """
+  @spec all([{atom, String.t}]) :: Request.request_response
+  def all(query_params \\ []) do
+    Request.get("/setting/admins/apitokens", QueryParams.convert(query_params, @all_params))
   end
 
-  def for_user(user_id, query_params \\ [], client \\ HTTPotion) do
-    Request.get("/setting/admins/#{user_id}/apitokens", QueryParams.convert(query_params, @for_user_params), client)
+  @doc """
+  Returns all Api Tokens for the specified user.
+  """
+  @spec for_user(String.t) :: Request.request_response
+  def for_user(user_id) do
+    Request.get("/setting/admins/#{user_id}/apitokens", "")
   end
 
 end

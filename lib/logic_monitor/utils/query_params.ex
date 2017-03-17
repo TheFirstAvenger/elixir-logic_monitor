@@ -22,6 +22,7 @@ defmodule LogicMonitor.QueryParams do
       ""
 
   """
+  @spec convert([{atom, String.t}], [atom]) :: String.t
   def convert(_params, []), do: ""
   def convert(params, [h | t]) do
     amp = case t do
