@@ -3,7 +3,7 @@ defmodule AlertsTest do
   alias LogicMonitor.Alerts
 
   test "all success" do
-    assert Alerts.all(sort: "this_way", fields: "a,b,c") == {:ok, {200, %{"items" => [%{}, %{}]}}}
+    assert Alerts.all(sort: "this_way", fields: "a,b,c") == {:ok, {200, [%{}, %{}]}}
   end
 
   test "all failure" do

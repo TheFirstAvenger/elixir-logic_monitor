@@ -3,7 +3,7 @@ defmodule ApiTokensTest do
   alias LogicMonitor.ApiTokens
 
   test "all success" do
-    assert ApiTokens.all(sort: "this_way", fields: "a,b,c") == {:ok, {200, %{"items" => [%{}, %{}]}}}
+    assert ApiTokens.all(sort: "this_way", fields: "a,b,c") == {:ok, {200, [%{}, %{}]}}
   end
 
   test "all failure" do
@@ -11,7 +11,7 @@ defmodule ApiTokensTest do
   end
 
   test "for_user success" do
-    assert ApiTokens.for_user("123") == {:ok, {200, %{"items" => [%{}, %{}]}}}
+    assert ApiTokens.for_user("123") == {:ok, {200, [%{}, %{}]}}
   end
 
   test "for_user failure" do

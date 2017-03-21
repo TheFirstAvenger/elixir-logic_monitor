@@ -3,7 +3,7 @@ defmodule AuditLogsTest do
   alias LogicMonitor.AuditLogs
 
   test "all success" do
-    assert AuditLogs.all(sort: "this_way", fields: "a,b,c") == {:ok, {200, %{"items" => [%{}, %{}]}}}
+    assert AuditLogs.all(sort: "this_way", fields: "a,b,c") == {:ok, {200, [%{}, %{}]}}
   end
 
   test "all failure" do
@@ -11,7 +11,7 @@ defmodule AuditLogsTest do
   end
 
   test "get success" do
-    assert AuditLogs.get("12345", fields: "a,b,c") == {:ok, {200, %{"items" => [%{}, %{}]}}}
+    assert AuditLogs.get("12345", fields: "a,b,c") == {:ok, {200, [%{}, %{}]}}
   end
 
   test "get failure" do

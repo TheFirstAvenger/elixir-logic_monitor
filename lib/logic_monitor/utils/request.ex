@@ -22,10 +22,20 @@ defmodule LogicMonitor.Request do
 
   @doc """
   Sends a GET request to the specified resource_path with the specified query_params.
+  Sends multiple requests if negative total is returned (indicating more resources available)
   """
   @spec get(String.t, String.t) :: request_response
   def get(resource_path, query_params) do
     request("GET", resource_path, query_params, "")
+    |> get_more(0, [], resource_path, query_params)
+  end
+
+  #total is negative if there are more to return
+  defp get_more({:error, reason},_, _, _, _), do: {:error, reason}
+  defp get_more({:ok, {200, %{"total" => total, "items" => items}}},_, _, _, _) when total >= 0, do: {:ok, {200, items}}
+  defp get_more({:ok, {200, %{"total" => total, "items" => items, "searchId" => search_id}}}, curr_offset, prev_items, resource_path, query_params) do
+    request("GET", resource_path, "searchId=#{search_id}&offset=#{curr_offset - total}&#{query_params}", "")
+    |> get_more(curr_offset - total, items ++ prev_items, resource_path, query_params)
   end
 
   @doc """
