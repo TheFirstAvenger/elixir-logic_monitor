@@ -3,7 +3,7 @@ require Logger
 defmodule LogicMonitor.Request do
   @moduledoc """
   Provides the base request function and helper functions for GET and POST.
-  Requests are authenticated using LMv1 Authentication as described [here](https://www.logicmonitor.com/support/rest-api-developers-guide/overview/using-logicmonitors-rest-api/#API-Token-Authentication)
+  Requests are authenticated using LMv1 Authentication as described [here](https://www.logicmonitor.com/support/rest-api-developers-guide/overview/using-logicmonitors-rest-api/#API-Token-Authentication).
   All request functions return either {:ok, {status, data}} or {:error, reason}
   """
 
@@ -21,8 +21,7 @@ defmodule LogicMonitor.Request do
   defp lm_client(), do: Application.get_env(:logic_monitor, :http_client) || HTTPotion
 
   @doc """
-  Sends a GET request to the specified resource_path with the specified query_params
-  Optional client value allows mocking of HTTPotion for testing purposes
+  Sends a GET request to the specified resource_path with the specified query_params.
   """
   @spec get(String.t, String.t) :: request_response
   def get(resource_path, query_params) do
@@ -33,7 +32,6 @@ defmodule LogicMonitor.Request do
   Sends a POST request to the specified resource_path with the specified
   query_params (as a string in the form "key1=val1&key2=val2") and the
   specified payload.
-  Optional client value allows mocking of HTTPotion for testing purposes
   """
   @spec post(String.t, String.t, String.t) :: request_response
   def post(resource_path, query_params, payload) do
@@ -45,7 +43,6 @@ defmodule LogicMonitor.Request do
   Sends a request using the specified method to the specified resource_path
   with the specified query_params (as a string in the form "key1=val1&key2=val2")
   and the specified payload.
-  Optional client value allows mocking of HTTPotion for testing purposes
   """
   @spec request(String.t, String.t, String.t, String.t) :: request_response
   def request(method, resource_path, query_params, payload) do

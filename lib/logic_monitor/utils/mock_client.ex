@@ -1,7 +1,7 @@
 defmodule LogicMonitor.MockClient do
 
   @moduledoc """
-  Mock Client for use in testing.
+  Mock Client for use in testing. Theory behind this approach to mocks explained by José Valim [here](http://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/).
   """
 
   #Request

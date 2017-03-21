@@ -1,5 +1,9 @@
 defmodule LogicMonitor.QueryParams do
 
+  @moduledoc """
+  Helper module to convert parameters passed as a keyword list into a querystring.
+  """
+
   @doc """
   Converts a keyword list and a list of atoms into a querystring containing only
   entries that exist in both the keyword list and the list of atoms.

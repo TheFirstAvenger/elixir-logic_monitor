@@ -62,7 +62,4 @@ LogicMonitor.Request.get("/alert/alerts","filter=type:serviceAlert")
 LogicMonitor.Request.post("/alert/alerts/1234/ack", "", "{\"ackComment\":\"hello\"}")
 ```
 
-You will notice the optional `client \\ HTTPotion` is the final parameter for all requests. This is to facilitate passing mock clients into test cases as explained by José Valim [here](http://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/).
-
-
 Docs can be found at [https://hexdocs.pm/logic_monitor](https://hexdocs.pm/logic_monitor).
