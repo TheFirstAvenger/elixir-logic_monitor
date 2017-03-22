@@ -32,10 +32,10 @@ defmodule LogicMonitor.Request do
 
   #total is negative if there are more to return
   defp get_more({:error, reason},_, _, _, _), do: {:error, reason}
-  defp get_more({:ok, {200, %{"total" => total, "items" => items}}},_, _, _, _) when total >= 0, do: {:ok, {200, items}}
+  defp get_more({:ok, {200, %{"total" => total, "items" => items}}}, _, prev_items, _, _) when total >= 0, do: {:ok, {200, prev_items ++ items}}
   defp get_more({:ok, {200, %{"total" => total, "items" => items, "searchId" => search_id}}}, curr_offset, prev_items, resource_path, query_params) do
     request("GET", resource_path, "searchId=#{search_id}&offset=#{curr_offset - total}&#{query_params}", "")
-    |> get_more(curr_offset - total, items ++ prev_items, resource_path, query_params)
+    |> get_more(curr_offset - total, prev_items ++ items, resource_path, query_params)
   end
 
   @doc """
@@ -57,11 +57,7 @@ defmodule LogicMonitor.Request do
   @spec request(String.t, String.t, String.t, String.t) :: request_response
   def request(method, resource_path, query_params, payload) do
     url = "https://#{lm_account()}.logicmonitor.com/santaba/rest#{resource_path}?#{query_params}"
-    timestamp_source = Application.get_env(:logic_monitor, :timestamp_override) || :os
-    epoch = timestamp_source.system_time(:millisecond)
-    request_vars = "#{method}#{epoch}#{resource_path}"
-    signature = :crypto.hmac(:sha256, lm_access_key(), request_vars) |> Base.encode16 |> to_string |> String.downcase |> Base.encode64
-    auth = "LMv1 #{lm_access_id()}:#{signature}:#{epoch}"
+    auth = get_auth(method, resource_path)
     Logger.debug("LogicMonitor.Request: Sending #{method} to #{url} using #{lm_client()}")
     case httpotion_request(lm_client(), method, url, payload, [timeout: lm_timeout(), headers: ["Content-Type": "application/json", "Authorization": auth]]) do
       %HTTPotion.ErrorResponse{message: message} ->
@@ -73,6 +69,14 @@ defmodule LogicMonitor.Request do
            {:error, reason} -> {:error, reason}
         end
     end
+  end
+
+  def get_auth(method, resource_path) do
+    timestamp_source = Application.get_env(:logic_monitor, :timestamp_override) || :os
+    epoch = timestamp_source.system_time(:millisecond)
+    request_vars = "#{method}#{epoch}#{resource_path}"
+    signature = :crypto.hmac(:sha256, lm_access_key(), request_vars) |> Base.encode16 |> to_string |> String.downcase |> Base.encode64
+    "LMv1 #{lm_access_id()}:#{signature}:#{epoch}"
   end
 
   @spec httpotion_request(atom, String.t, String.t, String.t, list) :: %HTTPotion.ErrorResponse{} | %HTTPotion.Response{}
