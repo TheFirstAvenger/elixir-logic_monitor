@@ -3,11 +3,11 @@ defmodule RequestTest do
   alias LogicMonitor.Request
 
   test "request headers" do
-    assert Request.request("GET", "/headers/test", "a=b&c=d", "") == {:ok, {200, %{"items" => ["opts", "success"], "total" => 5}}}
+    assert Request.request("GET", "/headers/test", "a=b&c=d", "") == {:ok, {200, %{"items" => ["opts", "success"], "total" => 2}}}
   end
 
   test "request get success" do
-    assert Request.request("GET", "/success/success", "a=b&c=d", "") == {:ok, {200, %{"items" => ["opts", "success"], "total" => 5}}}
+    assert Request.request("GET", "/success/success", "a=b&c=d", "") == {:ok, {200, %{"items" => ["opts", "success"], "total" => 2}}}
   end
 
   test "request get httpotion failure" do

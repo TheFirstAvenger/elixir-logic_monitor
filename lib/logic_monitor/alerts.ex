@@ -16,6 +16,17 @@ defmodule LogicMonitor.Alerts do
     Request.get("/alert/alerts", QueryParams.convert(query_params, @all_params))
   end
 
+  @doc """
+  Same as `all/1` but raises error if it fails
+  """
+  @spec all!([{atom, String.t}]) :: [any]
+  def all!(query_params \\ []) do
+    case all(query_params) do
+      {:ok, {200, items}} -> items
+      {:error, reason} -> raise "Error in #{__MODULE__}.all!: #{inspect reason}"
+    end
+  end
+
   # def ack(id, ack_comment) do
   #   Request.post("/alert/alerts/#{id}/ack", "", "{\"ackComment\":\"#{ack_comment}\"}")
   # end

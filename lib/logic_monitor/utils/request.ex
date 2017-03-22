@@ -27,15 +27,15 @@ defmodule LogicMonitor.Request do
   @spec get(String.t, String.t) :: request_response
   def get(resource_path, query_params) do
     request("GET", resource_path, query_params, "")
-    |> get_more(0, [], resource_path, query_params)
+    |> get_more([], resource_path, query_params)
   end
 
   #total is negative if there are more to return
-  defp get_more({:error, reason},_, _, _, _), do: {:error, reason}
-  defp get_more({:ok, {200, %{"total" => total, "items" => items}}}, _, prev_items, _, _) when total >= 0, do: {:ok, {200, prev_items ++ items}}
-  defp get_more({:ok, {200, %{"total" => total, "items" => items, "searchId" => search_id}}}, curr_offset, prev_items, resource_path, query_params) do
-    request("GET", resource_path, "searchId=#{search_id}&offset=#{curr_offset - total}&#{query_params}", "")
-    |> get_more(curr_offset - total, prev_items ++ items, resource_path, query_params)
+  defp get_more({:error, reason}, _, _, _), do: {:error, reason}
+  defp get_more({:ok, {200, %{"total" => total, "items" => items}}}, prev_items, _, _) when total >= 0 and ((length(prev_items) + length(items)) >= total), do: {:ok, {200, prev_items ++ items}}
+  defp get_more({:ok, {200, %{"items" => items, "searchId" => search_id}}}, prev_items, resource_path, query_params) do
+    request("GET", resource_path, "searchId=#{search_id}&offset=#{length(prev_items) + length(items)}&#{query_params}&size=300", "")
+    |> get_more(prev_items ++ items, resource_path, query_params)
   end
 
   @doc """
