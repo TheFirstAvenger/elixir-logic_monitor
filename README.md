@@ -10,7 +10,7 @@ LogicMonitor can be installed by adding `logic_monitor` to your list of dependen
 
 ```elixir
 def deps do
-  [{:logic_monitor, "~> 0.0.6"}]
+  [{:logic_monitor, "~> 0.0.7"}]
 end
 ```
 
