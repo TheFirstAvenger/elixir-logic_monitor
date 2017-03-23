@@ -72,7 +72,7 @@ defmodule LogicMonitor.Request do
   end
 
   def get_auth(method, resource_path) do
-    timestamp_source = Application.get_env(:logic_monitor, :timestamp_override) || :os
+    timestamp_source = Application.get_env(:logic_monitor, :timestamp_override) || System
     epoch = timestamp_source.system_time(:millisecond)
     request_vars = "#{method}#{epoch}#{resource_path}"
     signature = :crypto.hmac(:sha256, lm_access_key(), request_vars) |> Base.encode16 |> to_string |> String.downcase |> Base.encode64
