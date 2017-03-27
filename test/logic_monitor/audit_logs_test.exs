@@ -19,7 +19,7 @@ defmodule AuditLogsTest do
   end
 
   test "get success" do
-    assert AuditLogs.get("12345", fields: "a,b,c") == {:ok, {200, [%{}, %{}]}}
+    assert AuditLogs.get("12345", fields: "a,b,c") == {:ok, {200, %{"id" => 1}}}
   end
 
   test "get failure" do
@@ -27,7 +27,7 @@ defmodule AuditLogsTest do
   end
 
   test "get! success" do
-    assert AuditLogs.get!("12345", fields: "a,b,c") == [%{}, %{}]
+    assert AuditLogs.get!("12345", fields: "a,b,c") == %{"id" => 1}
   end
 
   test "get! failure" do

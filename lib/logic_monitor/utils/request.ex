@@ -22,21 +22,40 @@ defmodule LogicMonitor.Request do
 
   @doc """
   Sends a GET request to the specified resource_path with the specified query_params.
-  Sends multiple requests if negative total is returned (indicating more resources available)
+  Sends multiple requests if more resources are available.
   """
-  @spec get(String.t, String.t) :: request_response
-  def get(resource_path, query_params) do
+  @spec get_all(String.t, String.t) :: request_response
+  def get_all(resource_path, query_params) do
     request("GET", resource_path, query_params, "")
     |> get_more([], resource_path, query_params)
   end
 
-  #total is negative if there are more to return
+  @doc """
+  Sends a GET request to the specified resource_path with the specified query_params.
+  Expects a single return item.
+  """
+  @spec get_one(String.t, String.t) :: request_response
+  def get_one(resource_path, query_params) do
+    request("GET", resource_path, query_params, "")
+  end
+
+  #total is negative if there are more than "total" to return
   defp get_more({:error, reason}, _, _, _), do: {:error, reason}
   defp get_more({:ok, {200, %{"total" => total, "items" => items}}}, prev_items, _, _) when total >= 0 and ((length(prev_items) + length(items)) >= total), do: {:ok, {200, prev_items ++ items}}
   defp get_more({:ok, {200, %{"items" => items, "searchId" => search_id}}}, prev_items, resource_path, query_params) do
     request("GET", resource_path, "searchId=#{search_id}&offset=#{length(prev_items) + length(items)}&#{query_params}&size=300", "")
+    #|> dump_except_items
     |> get_more(prev_items ++ items, resource_path, query_params)
   end
+
+  #inject in get_more to see what info (besides items) each page is returning
+  # defp dump_except_items(val = {:ok, {200, data}}) do
+  #   data
+  #   |> Map.drop(["items"])
+  #   |> IO.inspect
+  #   IO.puts "returned #{length(data["items"])}"
+  #   val
+  # end
 
   @doc """
   Sends a POST request to the specified resource_path with the specified
@@ -62,12 +81,15 @@ defmodule LogicMonitor.Request do
     case httpotion_request(lm_client(), method, url, payload, [timeout: lm_timeout(), headers: ["Content-Type": "application/json", "Authorization": auth]]) do
       %HTTPotion.ErrorResponse{message: message} ->
         {:error, message}
-      %HTTPotion.Response{body: body, headers: headers} ->
+      %HTTPotion.Response{status_code: 404} ->
+        {:error, "404 - Not Found"}
+      %HTTPotion.Response{body: body, headers: %{hdrs: %{"content-type" => "application/json"}}} ->
         case Poison.decode(body) do
            {:ok, %{"status" => status, "data" => data}} -> {:ok, {status, data}}
-           {:error, {:invalid, "<", _}} -> {:error, {body, headers}}
            {:error, reason} -> {:error, reason}
         end
+      %HTTPotion.Response{headers: %{hdrs: %{"content-type" => content_type}}} ->
+        {:error, "Invalid content-type returned: #{content_type}"}
     end
   end
 

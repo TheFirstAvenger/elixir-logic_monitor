@@ -13,7 +13,7 @@ defmodule LogicMonitor.Alerts do
   """
   @spec all([{atom, String.t}]) :: Request.request_response
   def all(query_params \\ []) do
-    Request.get("/alert/alerts", QueryParams.convert(query_params, @all_params))
+    Request.get_all("/alert/alerts", QueryParams.convert(query_params, @all_params))
   end
 
   @doc """

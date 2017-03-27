@@ -36,30 +36,51 @@ config :logic_monitor,
 For each Resource, the list of allowable query parameters can be found on the LogicMonitor site [here](https://www.logicmonitor.com/support/rest-api-developers-guide/overview/) or in a module resource at the top of the respective module.
 ### Alerts
 ```elixir
-LogicMonitor.Alerts.all()
-LogicMonitor.Alerts.all(sort: "this_way", fields: "type,id")
+{:ok, {200, alerts}} = LogicMonitor.Alerts.all()
+{:ok, {200, alerts}} = LogicMonitor.Alerts.all(sort: "this_way", fields: "type,id")
+alerts = LogicMonitor.Alerts.all!()
+alerts = LogicMonitor.Alerts.all!(sort: "this_way", fields: "type,id")
 ```
 
 ### ApiTokens
 ```elixir
-LogicMonitor.ApiTokens.all()
-LogicMonitor.ApiTokens.all(sort: "this_way", fields: "accessId,adminName")
-LogicMonitor.ApiTokens.for_user("124")
+{:ok, {200, tokens}} = LogicMonitor.ApiTokens.all()
+{:ok, {200, tokens}} = LogicMonitor.ApiTokens.all(sort: "this_way", fields: "accessId,adminName")
+{:ok, {200, tokens}} = LogicMonitor.ApiTokens.for_user("124")
+tokens = LogicMonitor.ApiTokens.all!()
+tokens = LogicMonitor.ApiTokens.all!(sort: "this_way", fields: "accessId,adminName")
+tokens = LogicMonitor.ApiTokens.for_user!("124")
 ```
 
 ### AuditLogs
 ```elixir
-LogicMonitor.AuditLogs.all()
-LogicMonitor.AuditLogs.all(sort: "this_way", fields: "a,b,c")
-LogicMonitor.AuditLogs.get("12345")
-LogicMonitor.AuditLogs.get("12345", fields: "a,b,c")
+{:ok, {200, logs}} = LogicMonitor.AuditLogs.all()
+{:ok, {200, logs}} = LogicMonitor.AuditLogs.all(sort: "this_way", fields: "a,b,c")
+{:ok, {200, logs}} = LogicMonitor.AuditLogs.get("12345")
+{:ok, {200, logs}} = LogicMonitor.AuditLogs.get("12345", fields: "a,b,c")
+logs = LogicMonitor.AuditLogs.all!()
+logs = LogicMonitor.AuditLogs.all!(sort: "this_way", fields: "a,b,c")
+logs = LogicMonitor.AuditLogs.get!("12345")
+logs = LogicMonitor.AuditLogs.get!("12345", fields: "a,b,c")
 ```
+
+### Devices
+```elixir
+{:ok, {200, devices}} = LogicMonitor.Devices.all()
+{:ok, {200, devices}} = LogicMonitor.Devices.all(sort: "this_way", fields: "a,b,c")
+{:ok, {200, devices}} = LogicMonitor.Devices.get("12345")
+{:ok, {200, devices}} = LogicMonitor.Devices.get("12345", fields: "a,b,c")
+devices = LogicMonitor.Devices.all!()
+devices = LogicMonitor.Devices.all!(sort: "this_way", fields: "a,b,c")
+devices = LogicMonitor.Devices.get!("12345")
+devices = LogicMonitor.Devices.get!("12345", fields: "a,b,c")
+
 
 Raw requests to Logic Monitor for resources that are not yet implemented can be made like this:
 
 ```
-LogicMonitor.Request.get("/alert/alerts","filter=type:serviceAlert")
-LogicMonitor.Request.post("/alert/alerts/1234/ack", "", "{\"ackComment\":\"hello\"}")
+{:ok, {200, alerts}} = LogicMonitor.Request.get("/alert/alerts","filter=type:serviceAlert")
+{:ok, {status, alerts}} = LogicMonitor.Request.post("/alert/alerts/1234/ack", "", "{\"ackComment\":\"hello\"}")
 ```
 
 Docs can be found at [https://hexdocs.pm/logic_monitor](https://hexdocs.pm/logic_monitor).

@@ -1,20 +1,20 @@
-defmodule LogicMonitor.AuditLogs do
+defmodule LogicMonitor.Devices do
   alias LogicMonitor.Request
   alias LogicMonitor.QueryParams
 
   @moduledoc """
-  Provides access to the Audit Logs (formerly Access Logs) Resource as described [here](https://www.logicmonitor.com/support/rest-api-developers-guide/access-logs/get-access-log-entries/).
+  Provides access to the Devices resource.
   """
 
-  @all_params [:sort, :filter, :fields, :size, :offset, :searchId]
+  @all_params [:sort, :filter, :fields, :size, :offset]
   @get_params [:fields]
 
   @doc """
-  Returns all Api Tokens. Request parameters as described [here](https://www.logicmonitor.com/support/rest-api-developers-guide/access-logs/get-access-log-entries/).
+  Returns all Devices. Request parameters as described [here](https://www.logicmonitor.com/support/rest-api-developers-guide/alerts/get-devices/).
   """
   @spec all([{atom, String.t}]) :: Request.request_response
   def all(query_params \\ []) do
-    Request.get_all("/setting/accesslogs", QueryParams.convert(query_params, @all_params))
+    Request.get_all("/device/devices", QueryParams.convert(query_params, @all_params))
   end
 
   @doc """
@@ -29,11 +29,11 @@ defmodule LogicMonitor.AuditLogs do
   end
 
   @doc """
-  Returns the specified access log. Request parameters as described [here](https://www.logicmonitor.com/support/rest-api-developers-guide/access-logs/get-access-log-entries/).
+  Returns the specified device. Request parameters as described [here](https://www.logicmonitor.com/support/rest-api-developers-guide/devices/get-devices/).
   """
   @spec get(String.t, [{atom, String.t}]) :: Request.request_response
   def get(id, query_params \\ []) do
-    Request.get_one("/setting/accesslogs/#{id}", QueryParams.convert(query_params, @get_params))
+    Request.get_one("/device/devices/#{id}", QueryParams.convert(query_params, @get_params))
   end
 
   @doc """

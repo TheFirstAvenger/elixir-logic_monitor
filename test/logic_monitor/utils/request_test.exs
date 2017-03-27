@@ -15,14 +15,14 @@ defmodule RequestTest do
   end
 
   test "get headers" do
-    assert Request.get("/headers/test", "a=b&c=d") == {:ok, {200, ["opts", "success"]}}
+    assert Request.get_all("/headers/test", "a=b&c=d") == {:ok, {200, ["opts", "success"]}}
   end
 
   test "get success" do
-    assert Request.get("/success/success", "a=b&c=d") == {:ok, {200, ["opts", "success"]}}
+    assert Request.get_all("/success/success", "a=b&c=d") == {:ok, {200, ["opts", "success"]}}
   end
 
   test "get httpotion failure" do
-    assert Request.get("/httpotion/failure", "a=b&c=d") == {:error, "some error"}
+    assert Request.get_all("/httpotion/failure", "a=b&c=d") == {:error, "some error"}
   end
 end

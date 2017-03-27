@@ -13,7 +13,7 @@ defmodule LogicMonitor.ApiTokens do
   """
   @spec all([{atom, String.t}]) :: Request.request_response
   def all(query_params \\ []) do
-    Request.get("/setting/admins/apitokens", QueryParams.convert(query_params, @all_params))
+    Request.get_all("/setting/admins/apitokens", QueryParams.convert(query_params, @all_params))
   end
 
   @doc """
@@ -32,7 +32,7 @@ defmodule LogicMonitor.ApiTokens do
   """
   @spec for_user(String.t) :: Request.request_response
   def for_user(user_id) do
-    Request.get("/setting/admins/#{user_id}/apitokens", "")
+    Request.get_all("/setting/admins/#{user_id}/apitokens", "")
   end
 
   @doc """
