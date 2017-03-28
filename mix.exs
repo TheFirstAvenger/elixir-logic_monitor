@@ -3,7 +3,7 @@ defmodule LogicMonitor.Mixfile do
 
   def project do
     [app: :logic_monitor,
-     version: "0.0.8",
+     version: "0.0.9",
      elixir: "~> 1.4",
      description: description(),
      package: package(),
