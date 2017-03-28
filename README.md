@@ -74,11 +74,11 @@ devices = LogicMonitor.Devices.all!()
 devices = LogicMonitor.Devices.all!(sort: "this_way", fields: "a,b,c")
 devices = LogicMonitor.Devices.get!("12345")
 devices = LogicMonitor.Devices.get!("12345", fields: "a,b,c")
-
+```
 
 Raw requests to Logic Monitor for resources that are not yet implemented can be made like this:
 
-```
+```elixir
 {:ok, {200, alerts}} = LogicMonitor.Request.get("/alert/alerts","filter=type:serviceAlert")
 {:ok, {status, alerts}} = LogicMonitor.Request.post("/alert/alerts/1234/ack", "", "{\"ackComment\":\"hello\"}")
 ```
